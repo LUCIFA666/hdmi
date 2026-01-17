@@ -78,10 +78,10 @@ To turn HOI/video data into this format:
 3) Append the object name to `meta.json`, then concatenate the object body states (`pos`, `quat`, `lin_vel`, `ang_vel`) to the robot body states so shapes become `[T, B_robot + B_object, 3/4]`.
 
 ### Verify Your Data
-Visualize motions in Isaac Sim with `+task.command.record_motion=true`:
+Visualize motions in Isaac Sim with `+task.command.replay_motion=true`:
 
 ```bash
-python scripts/train.py algo=ppo_roa_train task=G1/hdmi/move_suitcase +task.command.replay_motion=true
+python scripts/play.py algo=ppo_roa_train task=G1/hdmi/move_suitcase +task.command.replay_motion=true
 ```
 
 Or visualize a `motion.npz` in MuJoCo:
