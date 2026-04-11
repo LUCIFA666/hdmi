@@ -300,31 +300,24 @@ BALL_CFG = RigidObjectCfg(
     ),
 )
 
-# Bootstrapped from the existing foldchair USD so the internal joint naming
-# still uses `foldchair_joint` until a custom chair asset replaces this file.
-CHAIR_CFG = ArticulationCfg(
-    class_type=CustomArticulation,
+CHAIR_CFG = RigidObjectCfg(
     prim_path="{ENV_REGEX_NS}/chair",
     spawn=sim_utils.UsdFileCfg(
         usd_path=f"{ASSET_PATH}/objects/chair/chair.usd",
         activate_contact_sensors=True,
-        articulation_props=sim_utils.ArticulationRootPropertiesCfg(
-            solver_position_iteration_count=4,
-            solver_velocity_iteration_count=0,
-            enabled_self_collisions=False,
-            fix_root_link=True
+        mass_props=sim_utils.MassPropertiesCfg(
+            mass=4.0,
+        ),
+        rigid_props=sim_utils.RigidBodyPropertiesCfg(
+            disable_gravity=False,
+            retain_accelerations=False,
+            linear_damping=0.0,
+            angular_damping=0.0,
+            max_linear_velocity=1000.0,
+            max_angular_velocity=1000.0,
+            max_depenetration_velocity=1.0,
         ),
     ),
-    actuators={
-        "foldchair_joint": IdealPDActuatorCfg(
-            joint_names_expr="foldchair_joint",
-            stiffness=0.0,
-            damping=1.0,
-            friction=0.0,
-            effort_limit=100.0,
-            velocity_limit=20.0,
-        )
-    },
 )
 
 FOLDCHAIR_CFG = ArticulationCfg(
