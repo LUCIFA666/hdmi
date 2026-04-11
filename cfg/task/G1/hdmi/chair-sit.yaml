@@ -1,0 +1,52 @@
+# @package task
+defaults:
+  - base/hdmi-base
+  - _self_
+
+name: G1ChairSit
+
+viewer:
+  lookat: [0.5, 0.0, 0.7]
+  eye: [1.5, -2.5, 1.7]
+
+robot:
+  name: g1
+  robot_type: g1_29dof_rubberhand-feet_box-eef_box-body_capsule
+
+command:
+  data_path: data/motion/g1/chair
+  root_body_name: "pelvis"
+
+  object_asset_name: "chair"
+  object_body_name: "object"
+
+  object_pose_range:
+    roll: [-0.0, 0.0]
+    pitch: [-0.0, 0.0]
+
+  # This clip is a sit-on-chair motion, not a hand-manipulation task.
+  # Keep the contact target defined for visualization/debugging, but disable
+  # the HDMI hand-contact reward/termination below to avoid mismatched signals.
+  contact_target_pos_offset:
+    - [0.0, 0.0, 0.35]
+    - [0.0, 0.0, 0.35]
+
+randomization:
+  object_body_randomization:
+    static_dynamic_friction_ratio_range: [1.0, 2.0]
+    dynamic_friction_range: [0.3, 0.8]
+    restitution_range: [0.0, 0.2]
+    mass_range: [3.0, 8.0]
+
+  body_scale:
+    name: "chair"
+    scale_range: [0.9, 1.1]
+
+reward:
+  object_tracking:
+    eef_contact_exp: {enabled: false}
+
+termination:
+  cum_object_pos_error:   {min_steps: 5000, threshold: 1.0}
+  cum_object_ori_error:   {min_steps: 5000, threshold: 5.0}
+  cum_lost_contact_steps: {min_steps: 5000}
