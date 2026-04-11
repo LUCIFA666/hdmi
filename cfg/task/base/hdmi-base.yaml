@@ -96,6 +96,8 @@ command:
   # the one that is used for tracking
   object_asset_name: ???     # Must be overridden (e.g., "suitcase")
   object_body_name: ???      # Must be overridden (e.g., "suitcase")
+  object_motion_name: null   # Optional motion-body alias if the dataset name differs from the scene asset name
+  object_motion_joint_name: null # Optional motion-joint alias if the dataset joint name differs from the scene joint name
 
   object_pose_range:
     x: [-0.05, 0.05]

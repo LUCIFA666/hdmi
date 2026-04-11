@@ -345,6 +345,8 @@ class RobotObjectTracking(RobotTracking):
         object_asset_name: str, # for finding the object in the scene
         object_body_name: str, # for the body that defines the contact target position
         object_joint_name: str | None = None, # object joint to track
+        object_motion_name: str | None = None, # object body name in motion data if different
+        object_motion_joint_name: str | None = None, # object joint name in motion data if different
         # for reset
         object_pose_range: Dict[str, Tuple[float, float]] = {
             "x": (-0.0, 0.0),
@@ -370,17 +372,19 @@ class RobotObjectTracking(RobotTracking):
         self.extra_object_body_id_motion = [self.dataset.body_names.index(name) for name in extra_object_names]
 
         self.object_asset_name = object_asset_name
+        self.object_motion_name = object_asset_name if object_motion_name is None else object_motion_name
         if object_joint_name is None:
             self.object = self.env.scene.rigid_objects[object_asset_name]
             self.object_joint_idx_motion = None
             self.object_joint_idx_asset = None
         else:
             self.object = self.env.scene.articulations[object_asset_name]
-            self.object_joint_idx_motion = self.dataset.joint_names.index(object_joint_name)
+            motion_joint_name = object_joint_name if object_motion_joint_name is None else object_motion_joint_name
+            self.object_joint_idx_motion = self.dataset.joint_names.index(motion_joint_name)
             self.object_joint_idx_asset = self.object.joint_names.index(object_joint_name)
         
         self.object_body_id_asset = self.object.body_names.index(object_body_name)
-        self.object_body_id_motion = self.dataset.body_names.index(object_asset_name)
+        self.object_body_id_motion = self.dataset.body_names.index(self.object_motion_name)
 
         pose_range_list = [object_pose_range.get(key, (0.0, 0.0)) for key in ["x", "y", "z", "roll", "pitch", "yaw"]]
         self.object_pose_range = torch.tensor(pose_range_list, device=self.device)
