@@ -77,6 +77,7 @@ class SimpleEnv(_Env):
 
                 obj_name = self.cfg.command.object_asset_name
                 obj_contact_body_name = self.cfg.command.object_body_name
+                obj_joint_name = self.cfg.command.get("object_joint_name", None)
 
                 obj_cfg = OBJECTS[obj_name]
                 obj_cfg.prim_path = "{ENV_REGEX_NS}/" + obj_name
@@ -87,7 +88,11 @@ class SimpleEnv(_Env):
 
                 # add contact sensor to the box
                 eef_names = self.cfg.command.get("contact_eef_body_name", [])
-                contact_geom_prim_path = "{ENV_REGEX_NS}/" + obj_name + "/" + obj_contact_body_name
+                # Rigid objects with a single body are typically authored directly at the asset root.
+                if obj_joint_name is None:
+                    contact_geom_prim_path = "{ENV_REGEX_NS}/" + obj_name
+                else:
+                    contact_geom_prim_path = "{ENV_REGEX_NS}/" + obj_name + "/" + obj_contact_body_name
 
                 for eef_name in eef_names:
                     contact_sensor_name = f"{eef_name}_{obj_name}_contact_forces"

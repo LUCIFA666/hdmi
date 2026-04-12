@@ -383,7 +383,21 @@ class RobotObjectTracking(RobotTracking):
             self.object_joint_idx_motion = self.dataset.joint_names.index(motion_joint_name)
             self.object_joint_idx_asset = self.object.joint_names.index(object_joint_name)
         
-        self.object_body_id_asset = self.object.body_names.index(object_body_name)
+        try:
+            self.object_body_id_asset = self.object.body_names.index(object_body_name)
+        except ValueError as exc:
+            if self.object_joint_idx_asset is None and len(self.object.body_names) == 1:
+                actual_body_name = self.object.body_names[0]
+                print(
+                    f"Object body name '{object_body_name}' not found for rigid object "
+                    f"'{object_asset_name}', falling back to '{actual_body_name}'."
+                )
+                self.object_body_id_asset = 0
+            else:
+                raise ValueError(
+                    f"Object body name '{object_body_name}' not found in asset body names "
+                    f"{self.object.body_names} for asset '{object_asset_name}'."
+                ) from exc
         self.object_body_id_motion = self.dataset.body_names.index(self.object_motion_name)
 
         pose_range_list = [object_pose_range.get(key, (0.0, 0.0)) for key in ["x", "y", "z", "roll", "pitch", "yaw"]]
