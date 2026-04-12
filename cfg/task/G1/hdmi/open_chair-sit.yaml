@@ -18,8 +18,7 @@ command:
   root_body_name: "pelvis"
 
   object_asset_name: "chair"
-  # The current motion clip still labels the tracked object as foldchair.
-  object_motion_name: "foldchair"
+  object_motion_name: "chair"
   object_body_name: "object"
 
   object_pose_range:
