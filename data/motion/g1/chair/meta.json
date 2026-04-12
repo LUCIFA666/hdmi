@@ -28,7 +28,7 @@
         "right_wrist_roll_link",
         "right_wrist_pitch_link",
         "right_wrist_yaw_link",
-        "chair"
+        "custom_object_011"
     ],
     "joint_names": [
         "left_hip_pitch_joint",
