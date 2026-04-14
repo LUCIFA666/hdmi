@@ -68,7 +68,7 @@ randomization:
     static_dynamic_friction_ratio_range: [1.0, 1.0]
     dynamic_friction_range: [0.6, 0.6]
     restitution_range: [0.0, 0.0]
-    mass_range: [5.0, 5.0]
+    mass_range: [1000.0, 1000.0]
 
   body_scale:
     name: "chair"
