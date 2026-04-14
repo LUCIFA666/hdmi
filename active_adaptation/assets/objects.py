@@ -320,6 +320,24 @@ CHAIR_CFG = RigidObjectCfg(
     ),
 )
 
+CHAIR_FIXED_CFG = RigidObjectCfg(
+    prim_path="{ENV_REGEX_NS}/chair_fixed",
+    spawn=sim_utils.UsdFileCfg(
+        usd_path=f"{ASSET_PATH}/objects/chair/object.usda",
+        activate_contact_sensors=True,
+        mass_props=sim_utils.MassPropertiesCfg(
+            mass=4.0,
+        ),
+        rigid_props=sim_utils.RigidBodyPropertiesCfg(
+            rigid_body_enabled=True,
+            kinematic_enabled=True,
+        ),
+        collision_props=sim_utils.CollisionPropertiesCfg(
+            collision_enabled=True,
+        ),
+    ),
+)
+
 FOLDCHAIR_CFG = ArticulationCfg(
     class_type=CustomArticulation,
     prim_path="{ENV_REGEX_NS}/foldchair",

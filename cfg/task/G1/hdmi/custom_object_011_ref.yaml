@@ -44,7 +44,7 @@ command:
   init_joint_pos_noise: 0.0
   init_joint_vel_noise: 0.0
 
-  object_asset_name: "chair"
+  object_asset_name: "chair_fixed"
   object_motion_name: "custom_object_011"
   object_body_name: "object"
 
@@ -71,7 +71,7 @@ randomization:
     mass_range: [1000.0, 1000.0]
 
   body_scale:
-    name: "chair"
+    name: "chair_fixed"
     scale_range: [1.0, 1.0]
 
 termination:

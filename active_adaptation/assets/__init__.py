@@ -19,6 +19,7 @@ OBJECTS = {
     "stool_low": STOOL_LOW_CFG,
     "ball": BALL_CFG,
     "chair": CHAIR_CFG,
+    "chair_fixed": CHAIR_FIXED_CFG,
     "foldchair": FOLDCHAIR_CFG,
     "stool_support": STOOL_SUPPORT_CFG,
     "foam": FOAM_CFG,
