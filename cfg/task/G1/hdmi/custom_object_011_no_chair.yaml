@@ -1,0 +1,47 @@
+# @package task
+defaults:
+  - base/tracking-base
+  - _self_
+
+name: G1TrackCustomObject011NoChair
+
+viewer:
+  lookat: [-0.4, 0.55, 0.55]
+  eye: [1.4, -2.2, 1.4]
+
+max_episode_length: 420
+
+robot:
+  name: g1
+  robot_type: g1_29dof_rubberhand-feet_box-eef_box-body_capsule
+
+command:
+  # Reuse the same sit-down motion clip, but switch to pure body tracking so
+  # training no longer spawns or tracks the chair object.
+  data_path: data/motion/g1/chair
+  root_body_name: "pelvis"
+
+  pose_range:
+    x: [0.0, 0.0]
+    y: [0.0, 0.0]
+    z: [0.0, 0.0]
+    roll: [0.0, 0.0]
+    pitch: [0.0, 0.0]
+    yaw: [0.0, 0.0]
+
+  velocity_range:
+    x: [0.0, 0.0]
+    y: [0.0, 0.0]
+    z: [0.0, 0.0]
+    roll: [0.0, 0.0]
+    pitch: [0.0, 0.0]
+    yaw: [0.0, 0.0]
+
+  init_joint_pos_noise: 0.0
+  init_joint_vel_noise: 0.0
+
+termination:
+  cum_body_pos_error:       {body_names: "torso_link", min_steps: 100000, threshold: 1000.0}
+  cum_body_ori_error:       {body_names: "torso_link", min_steps: 100000, threshold: 1000.0}
+  cum_body_pos_error_local: {body_names: ".*",         min_steps: 100000, threshold: 1000.0}
+  cum_body_ori_error_local: {body_names: ".*",         min_steps: 100000, threshold: 1000.0}
