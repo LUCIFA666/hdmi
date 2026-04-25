@@ -74,6 +74,12 @@ randomization:
     name: "chair_fixed"
     scale_range: [1.0, 1.0]
 
+reward:
+  object_tracking:
+    eef_contact_exp: {enabled: false}
+  debug:
+    eef_contact_all: {enabled: false}
+
 termination:
   cum_body_pos_error:       {body_names: "torso_link", min_steps: 100000, threshold: 1000.0}
   cum_body_ori_error:       {body_names: "torso_link", min_steps: 100000, threshold: 1000.0}
