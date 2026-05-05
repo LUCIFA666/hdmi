@@ -15,6 +15,12 @@ HEADLESS="${HEADLESS:-true}"
 LOG_DIR="${LOG_DIR:-$ROOT_DIR/logs}"
 PYTHON_BIN="${PYTHON_BIN:-python}"
 
+restore_nounset=0
+if [[ $- == *u* ]]; then
+  restore_nounset=1
+  set +u
+fi
+
 if command -v conda >/dev/null 2>&1; then
   eval "$(conda shell.bash hook)"
 elif [[ -f "$HOME/miniconda3/etc/profile.d/conda.sh" ]]; then
@@ -28,6 +34,10 @@ else
 fi
 
 conda activate "$CONDA_ENV"
+
+if [[ $restore_nounset -eq 1 ]]; then
+  set -u
+fi
 
 if [[ -n "${PYTHONPATH:-}" ]]; then
   export PYTHONPATH="$ROOT_DIR:$PYTHONPATH"
