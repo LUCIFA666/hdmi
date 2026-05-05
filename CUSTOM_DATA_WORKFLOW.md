@@ -444,7 +444,7 @@ python scripts/upright_motion_by_object.py \
 ### 13.2 播放 `chair1`
 
 ```bash
-cd /home/boran/humanoid/newhdmi1
+cd /home/boran/humanoid/newhdmi
 export PYTHONPATH=$PWD
 CUDA_VISIBLE_DEVICES=0 python scripts/play.py \
   algo=ppo_roa_train \
@@ -476,13 +476,17 @@ CUDA_VISIBLE_DEVICES=0 python scripts/render.py \
 ```bash
 cd /home/boran/humanoid/newhdmi1
 export PYTHONPATH=$PWD
-CUDA_VISIBLE_DEVICES=0 python scripts/mytrain.py \
+export CUDA_VISIBLE_DEVICES=0
+
+python scripts/mytrain.py \
   --data-dir data/motion/g1/chair1 \
   algo=ppo_roa_train \
   task=G1/hdmi/custom_object_011_ref \
+  task.num_envs=64 \
+  total_frames=20000000 \
   wandb.mode=online \
   wandb.project=hdmi \
-  exp_name=chair1_custom
+  exp_name=chair1_custom_10k
 ```
 
 ---

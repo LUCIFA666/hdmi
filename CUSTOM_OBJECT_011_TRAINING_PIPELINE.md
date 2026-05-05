@@ -3,13 +3,53 @@
 这份说明对应下面这个统一入口：
 
 - [custom_object_011_pipeline.cmd](C:/Users/17355/Desktop/VSCODE/hdmi/custom_object_011_pipeline.cmd)
+- [custom_object_011_pipeline.sh](C:/Users/17355/Desktop/VSCODE/hdmi/custom_object_011_pipeline.sh)
+- [train-custom_object_011_curriculum.cmd](C:/Users/17355/Desktop/VSCODE/hdmi/train-custom_object_011_curriculum.cmd)
+- [train-custom_object_011_curriculum.sh](C:/Users/17355/Desktop/VSCODE/hdmi/train-custom_object_011_curriculum.sh)
 
 它把 `chair / chair_mix_walk / chair_mix_locomotion / chair_mix_obstacles` 这几份数据集的常用 `replay / train / play` 命令都收口到了一个地方，适合直接上手。
+
+## 0. 一键 curriculum
+
+如果你已经决定采用更稳的两阶段流程，可以直接用：
+
+```bat
+train-custom_object_011_curriculum.cmd -- wandb.mode=online
+```
+
+它会自动做两件事：
+
+1. `custom_object_011_no_chair + chair_mix_locomotion`
+2. `custom_object_011_ref + chair`
+
+第二阶段会自动继承第一阶段产出的 teacher checkpoint，不需要你手动复制 `run:<teacher_run_path>`。
+
+Linux 服务器上对应可以直接跑：
+
+```bash
+bash train-custom_object_011_curriculum.sh
+```
+
+如果你想顺手指定显卡、总帧数和 W&B：
+
+```bash
+CUDA_VISIBLE_DEVICES=0 \
+TEACHER_TOTAL_FRAMES=50000000 \
+REF_TOTAL_FRAMES=20000000 \
+WANDB_MODE=online \
+bash train-custom_object_011_curriculum.sh
+```
 
 ## 1. 先看可用数据集
 
 ```bat
 custom_object_011_pipeline.cmd list
+```
+
+Linux 服务器对应：
+
+```bash
+bash custom_object_011_pipeline.sh list
 ```
 
 内置别名：
