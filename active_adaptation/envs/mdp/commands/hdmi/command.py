@@ -15,6 +15,17 @@ quat_apply = batchify(quat_apply)
 quat_apply_inverse = batchify(quat_apply_inverse)
 torch.set_printoptions(precision=3, sci_mode=False, linewidth=120)
 
+
+def _resample_object_contact(contact: np.ndarray, target_length: int) -> np.ndarray:
+    if contact.ndim == 1:
+        contact = contact[:, None]
+    if contact.shape[0] == target_length:
+        return contact.astype(bool, copy=False)
+    if contact.shape[0] == 1:
+        return np.repeat(contact.astype(bool, copy=False), target_length, axis=0)
+    sample_idx = np.rint(np.linspace(0, contact.shape[0] - 1, num=target_length)).astype(int)
+    return contact[sample_idx].astype(bool, copy=False)
+
 class RobotTracking(Command):
     def __init__(
         self, env, data_path: List[str] | str,
@@ -456,11 +467,17 @@ class RobotObjectTracking(RobotTracking):
             scale = scale_tensor
         self.contact_target_pos_offset *= scale.unsqueeze(1).to(self.device)
 
-        # load object contact data
-        motion_paths = self.dataset.motion_paths
-        assert len(motion_paths) == 1, "Only one motion path is supported for RobotObjectTracking"
-        motion_data = np.load(motion_paths[0], allow_pickle=True)
-        object_contact = motion_data["object_contact"]
+        # Load object contact for every motion clip and align it with the
+        # interpolated dataset length used by MotionDataset.
+        object_contacts = []
+        for motion_idx, motion_path in enumerate(self.dataset.motion_paths):
+            motion_data = np.load(motion_path, allow_pickle=True)
+            if "object_contact" not in motion_data:
+                raise KeyError(f"{motion_path} does not contain required key 'object_contact'")
+            expected_length = int(self.dataset.lengths[motion_idx].item())
+            object_contact = _resample_object_contact(motion_data["object_contact"], expected_length)
+            object_contacts.append(object_contact)
+        object_contact = np.concatenate(object_contacts, axis=0)
         self._object_contact = torch.tensor(object_contact, device=self.device, dtype=torch.bool)
         # if self._object_contact.shape[1] == 1:
         #     # expand to num_eefs
