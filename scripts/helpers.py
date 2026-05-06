@@ -148,7 +148,12 @@ def make_env_policy(cfg: DictConfig):
 
     if "vecnorm" in state_dict.keys():
         print(colored("[Info]: Load VecNorm from checkpoint.", "green"))
-        vecnorm.load_state_dict(state_dict["vecnorm"])
+        try:
+            vecnorm.load_state_dict(state_dict["vecnorm"])
+        except RuntimeError as err:
+            # Sequential curricula can switch observation layouts between stages.
+            # When that happens, the old VecNorm statistics no longer match.
+            print(colored(f"[Warn]: Skip VecNorm checkpoint due to mismatch: {err}", "yellow"))
     if cfg.vecnorm == "train":
         print(colored("[Info]: Updating obervation normalizer.", "green"))
         transform.append(vecnorm)
